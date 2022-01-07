@@ -6,7 +6,7 @@ const corsHeaders = {
 
 export function toJSON(data: unknown, status = 200): Response {
     let body = JSON.stringify(data, null, 2);
-    let headers = {'content-type': 'application/json', ...corsHeaders};
+    let headers = {'Content-Type': 'application/json', ...corsHeaders};
     return new Response(body, {headers, status});
 }
 

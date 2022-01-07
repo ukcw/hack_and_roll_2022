@@ -14,3 +14,4 @@ format = "modules"
 
 [vars]
 REALM_APPID = "attendancetracker-hocoh"
+REALM_API_KEY = "pNWICKgoHIj0SNSxXNBqCdRzXEJ60XRcxjw0kMpEjmuKlprdV2d9OuEbw1RWzh55"
