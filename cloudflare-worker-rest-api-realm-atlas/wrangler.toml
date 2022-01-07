@@ -1,0 +1,16 @@
+name = "mongo-realm-worker"
+type = "javascript"
+
+account_id = "0d13146e53ce108313d59c78906cd900"
+workers_dev = true # or zone_id = "<ZONE ID>" if you have one
+
+[build]
+command = "npm run build"
+
+[build.upload]
+dir = "build"
+main = "./index.mjs"
+format = "modules"
+
+[vars]
+REALM_APPID = "attendancetracker-hocoh"
