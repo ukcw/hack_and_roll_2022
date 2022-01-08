@@ -4,11 +4,15 @@ import {
   Heading,
   Table,
   Tbody,
+  Text,
   Td,
   Th,
   Thead,
   Tr,
   VStack,
+  Select,
+  Stack,
+  Button,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 const _ = require("lodash");
@@ -37,6 +41,7 @@ function getDate(str) {
 }
 
 const DisplayTable = (props) => {
+  const [dateFilter, setDateFilter] = useState("");
   const dateResults = {};
   props.data.forEach((docu) => {
     let dateObj = getDate(docu.date);
@@ -57,31 +62,74 @@ const DisplayTable = (props) => {
     dateResults[dateObj].push({ name: docu.name, status: docu.status });
   });
 
-  console.log("dateRes", dateResults);
-  console.log(dateKeys);
-  console.log(sortedDateKeys);
+  function handleChange(e) {
+    if (e.target.value) {
+      setDateFilter(e.target.value);
+    }
+  }
+
   return (
-    <Table>
-      <Thead>
-        <Tr>
-          <Th>Date</Th>
-          <Th>Name</Th>
-          <Th>Status</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {sortedDateKeys.map((dKey) =>
-          dateResults[dKey].map((entry) => (
-            <Tr key={entry}>
-              <Td>{dKey}</Td>
-              <Td>{entry.name}</Td>
-              <Td>{entry.status}</Td>
-            </Tr>
-          ))
-        )}
-      </Tbody>
-    </Table>
+    <>
+      <Stack>
+        <Select
+          variant="outline"
+          placeholder="Select date"
+          value={dateFilter}
+          onChange={(e) => handleChange(e)}
+        >
+          {sortedDateKeys.map((key) => (
+            <option key={key} value={key}>
+              {key}
+            </option>
+          ))}
+        </Select>
+        <Button
+          colorScheme="gray"
+          variant="outline"
+          onClick={() => setDateFilter(false)}
+        >
+          See all
+        </Button>
+        )
+      </Stack>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>Date</Th>
+            <Th>Name</Th>
+            <Th>Status</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {sortedDateKeys.map((dKey) => {
+            if (dateFilter) {
+              if (dKey === dateFilter) {
+                return dateResults[dKey].map((entry, i) => (
+                  <Tr key={i}>
+                    <Td>{dKey}</Td>
+                    <Td>{entry.name}</Td>
+                    <Td>{entry.status}</Td>
+                  </Tr>
+                ));
+              }
+            } else {
+              return dateResults[dKey].map((entry, i) => (
+                <Tr key={i}>
+                  <Td>{dKey}</Td>
+                  <Td>{entry.name}</Td>
+                  <Td>{entry.status}</Td>
+                </Tr>
+              ));
+            }
+          })}
+        </Tbody>
+      </Table>
+    </>
   );
+};
+
+const DefaultDisplay = () => {
+  return <Text fontSize="6x1">No attendance data recorded</Text>;
 };
 
 const FrontPage = () => {
@@ -92,7 +140,6 @@ const FrontPage = () => {
       const data = await getHistory();
       if (data) {
         setHistoryData(data);
-        console.log(data);
       }
     }
     fetchMyAPI();
@@ -103,7 +150,11 @@ const FrontPage = () => {
       <Flex h="120vh" py={20}>
         <VStack w="full">
           <Heading>Attendance History</Heading>
-          <DisplayTable data={historyData} />
+          {historyData.length ? (
+            <DisplayTable data={historyData} />
+          ) : (
+            <DefaultDisplay />
+          )}
         </VStack>
       </Flex>
     </Container>
