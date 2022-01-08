@@ -69,7 +69,7 @@ def sub_messages(message):
         bot.send_message(message.from_user.id,"Select the option that describes your category",reply_markup=keyboard("Home"))
     elif message.text in office or message.text in home:
         markup = telebot.types.ReplyKeyboardRemove()
-        bot.send_message(message.from_user.id,"You have completed your selection",reply_markup=markup)
+        bot.send_message(message.from_user.id,"You have completed your selection, please wait for confirmation.",reply_markup=markup)
 
         # dateStr and telegramID
         userId,name = getSender(message)
@@ -83,6 +83,6 @@ def sub_messages(message):
             bot.send_message(message.from_user.id, alreadySubmittedMessage + ' :)')
 
     else:
-        bot.send_message(message.chat.id,message.text)
+        bot.send_message(message.chat.id,f"You sent {message.text} which is not a currently recognized command/input, here are a list of recognized commands [/start]")
 
 bot.infinity_polling()
